@@ -38,6 +38,10 @@ def build_parser() -> argparse.ArgumentParser:
     weekly = sub.add_parser("weekly", help="Per-week summary")
     weekly.add_argument("--data", type=Path, default=None)
 
+    web = sub.add_parser("web", help="Start web UI")
+    web.add_argument("--host", default="127.0.0.1")
+    web.add_argument("--port", type=int, default=5000)
+
     return parser
 
 
@@ -75,6 +79,12 @@ def main(argv: list[str] | None = None) -> int:
                 f"ISO {s.iso_year}-W{s.iso_week:02d}: "
                 f"{s.draw_count} draw(s), top={list(s.top_numbers)}"
             )
+        return 0
+
+    if args.command == "web":
+        from lotto.web.app import create_app
+
+        create_app().run(host=args.host, port=args.port, debug=False)
         return 0
 
     return 1

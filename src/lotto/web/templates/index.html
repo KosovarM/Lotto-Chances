@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ t('title') }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <div>
+        <h1>{{ t('title') }}</h1>
+        <p class="subtitle">{{ t('subtitle') }}</p>
+      </div>
+      <nav class="lang-switch" aria-label="Language">
+        <a href="?lang=en&tab={{ form.tab }}&preset={{ form.preset }}&start={{ form.start }}&end={{ form.end }}&series={{ form.series }}"
+           class="lang-btn {% if lang == 'en' %}active{% endif %}">{{ t('lang_en') }}</a>
+        <a href="?lang=de&tab={{ form.tab }}&preset={{ form.preset }}&start={{ form.start }}&end={{ form.end }}&series={{ form.series }}"
+           class="lang-btn {% if lang == 'de' %}active{% endif %}">{{ t('lang_de') }}</a>
+      </nav>
+    </div>
+    <p class="disclaimer">{{ t('disclaimer') }}</p>
+  </header>
+
+  <nav class="tab-bar container">
+    <a href="?lang={{ lang }}&tab=stats&preset={{ form.preset }}&start={{ form.start }}&end={{ form.end }}&series={{ form.series }}"
+       class="tab-btn {% if form.tab == 'stats' %}active{% endif %}">{{ t('tab_stats') }}</a>
+    <a href="?lang={{ lang }}&tab=latest&preset={{ form.preset }}&start={{ form.start }}&end={{ form.end }}&series={{ form.series }}"
+       class="tab-btn {% if form.tab == 'latest' %}active{% endif %}">{{ t('tab_latest') }}</a>
+  </nav>
+
+  <main class="container">
+    {% if form.tab == 'latest' %}
+    {% include 'partials/latest.html' %}
+    {% else %}
+    {% include 'partials/stats.html' %}
+    {% endif %}
+  </main>
+
+  <script>
+    function toggleCustomDates() {
+      const custom = document.querySelector('input[name=preset][value=custom]');
+      if (!custom) return;
+      document.getElementById('custom-dates').classList.toggle('hidden', !custom.checked);
+    }
+  </script>
+</body>
+</html>

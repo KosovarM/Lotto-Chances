@@ -11,6 +11,7 @@ venv/
 # Data cache
 data/*.json
 !data/sample_draws.json
+data/*.csv
 
 # IDE
 .vscode/

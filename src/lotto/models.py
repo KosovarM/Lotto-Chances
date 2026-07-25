@@ -39,5 +39,23 @@ class WeeklySummary:
     top_numbers: tuple[int, ...]
 
 
+@dataclass(frozen=True)
+class SuperzahlFrequency:
+    digit: int
+    count: int
+    pct: float
+
+
+@dataclass(frozen=True)
+class SeriesMatchResult:
+    numbers: tuple[int, ...]
+    draw_count: int
+    exact_matches: int
+    exact_pct: float
+    subset_matches: int
+    subset_pct: float
+    partial_matches: tuple[tuple[int, int, float], ...]
+
+
 def validate_draws(draws: Iterable[Draw]) -> list[Draw]:
     return list(draws)

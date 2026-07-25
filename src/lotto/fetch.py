@@ -3,7 +3,6 @@ from __future__ import annotations
 import csv
 import json
 from datetime import date, timedelta
-from io import StringIO
 from pathlib import Path
 from urllib.error import URLError
 from urllib.request import urlopen
@@ -24,6 +23,8 @@ CSV_CACHE = DATA_DIR / "draws_cache.csv"
 JSON_CACHE = DATA_DIR / "draws_cache.json"
 SAMPLE_JSON = DATA_DIR / "sample_draws.json"
 CACHE_MAX_AGE_DAYS = 7
+# Lotto 6aus49: Wednesday and Saturday (~19:25 CET)
+DRAW_WEEKDAYS = (2, 5)  # Mon=0 … Wed=2, Sat=5
 
 
 def _parse_superzahl(raw: str | None) -> int | None:
@@ -73,8 +74,27 @@ def filter_last_year(draws: list[Draw], *, reference: date | None = None) -> lis
     return [d for d in draws if start <= d.draw_date <= end]
 
 
-def _cache_is_fresh(path: Path) -> bool:
+def _last_scheduled_draw_day(reference: date | None = None) -> date:
+    """Most recent Wed/Sat on or before reference (inclusive draw days)."""
+    ref = reference or date.today()
+    current = ref
+    while current.weekday() not in DRAW_WEEKDAYS:
+        current -= timedelta(days=1)
+    return current
+
+
+def _cache_data_is_stale(draws: list[Draw], *, reference: date | None = None) -> bool:
+    """True when cache is missing the latest expected draw."""
+    if not draws:
+        return True
+    expected_latest = _last_scheduled_draw_day(reference)
+    return draws[-1].draw_date < expected_latest
+
+
+def _cache_is_fresh(path: Path, draws: list[Draw] | None = None) -> bool:
     if not path.exists():
+        return False
+    if draws is not None and _cache_data_is_stale(draws):
         return False
     age = date.today() - date.fromtimestamp(path.stat().st_mtime)
     return age.days < CACHE_MAX_AGE_DAYS
@@ -87,24 +107,40 @@ def download_csv(url: str = CSV_URL, dest: Path = CSV_CACHE) -> Path:
     return dest
 
 
-def fetch_draws_last_year(*, force_refresh: bool = False) -> list[Draw]:
-    """Load draws from cache or remote CSV; return last 365 days."""
-    if force_refresh or not _cache_is_fresh(CSV_CACHE):
-        try:
-            download_csv()
-        except (URLError, OSError, ValueError):
-            if CSV_CACHE.exists():
-                pass
-            elif JSON_CACHE.exists():
-                return filter_last_year(load_draws_from_json(JSON_CACHE))
-            elif SAMPLE_JSON.exists():
-                return filter_last_year(load_draws_from_json(SAMPLE_JSON))
+def _ensure_cache(*, force_refresh: bool = False) -> None:
+    cached_draws: list[Draw] | None = None
+    if CSV_CACHE.exists():
+        cached_draws = load_draws_from_csv(CSV_CACHE)
+
+    needs_download = force_refresh or not _cache_is_fresh(CSV_CACHE, cached_draws)
+    if not needs_download:
+        return
+
+    try:
+        download_csv()
+    except (URLError, OSError, ValueError):
+        if not CSV_CACHE.exists() and not JSON_CACHE.exists() and not SAMPLE_JSON.exists():
             raise
 
+
+def _load_cached_draws() -> list[Draw]:
+    _ensure_cache()
     if CSV_CACHE.exists():
-        return filter_last_year(load_draws_from_csv(CSV_CACHE))
-
+        return load_draws_from_csv(CSV_CACHE)
     if JSON_CACHE.exists():
-        return filter_last_year(load_draws_from_json(JSON_CACHE))
+        return load_draws_from_json(JSON_CACHE)
+    return load_draws_from_json(SAMPLE_JSON)
 
-    return filter_last_year(load_draws_from_json(SAMPLE_JSON))
+
+def fetch_all_draws(*, force_refresh: bool = False) -> list[Draw]:
+    """Load full draw history from cache or remote CSV."""
+    if force_refresh:
+        _ensure_cache(force_refresh=True)
+    return _load_cached_draws()
+
+
+def fetch_draws_last_year(*, force_refresh: bool = False) -> list[Draw]:
+    """Load draws from cache or remote CSV; return last 365 days."""
+    if force_refresh:
+        _ensure_cache(force_refresh=True)
+    return filter_last_year(_load_cached_draws())

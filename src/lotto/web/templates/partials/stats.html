@@ -1,0 +1,175 @@
+<section class="card controls">
+  <form method="get" class="analyze-form">
+    <input type="hidden" name="lang" value="{{ lang }}">
+    <input type="hidden" name="tab" value="stats">
+
+    <fieldset>
+      <legend>{{ t('timeframe') }}</legend>
+      <div class="preset-grid">
+        {% for key, label in [
+          ('1m', t('preset_1m')),
+          ('3m', t('preset_3m')),
+          ('6m', t('preset_6m')),
+          ('1y', t('preset_1y')),
+          ('all', t('preset_all')),
+          ('custom', t('preset_custom'))
+        ] %}
+        <label class="preset-option">
+          <input type="radio" name="preset" value="{{ key }}"
+                 {% if form.preset == key %}checked{% endif %}
+                 onchange="toggleCustomDates()">
+          <span>{{ label }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      <div id="custom-dates" class="custom-dates {% if form.preset != 'custom' %}hidden{% endif %}">
+        <label>{{ t('from') }}
+          <input type="date" name="start" value="{{ form.start }}">
+        </label>
+        <label>{{ t('to') }}
+          <input type="date" name="end" value="{{ form.end }}">
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>{{ t('series_title') }}</legend>
+      <p class="hint">{{ t('series_hint') }}</p>
+      <input type="text" name="series" value="{{ form.series }}"
+             placeholder="3, 12, 18, 27, 33, 45" class="series-input">
+    </fieldset>
+
+    <button type="submit" class="btn-primary">{{ t('analyze') }}</button>
+  </form>
+</section>
+
+{% if error %}
+<div class="alert">{{ error }}</div>
+{% else %}
+
+<section class="stats-bar card">
+  <div class="stat">
+    <span class="stat-label">{{ t('draws_in_range') }}</span>
+    <span class="stat-value">{{ draw_count }}</span>
+  </div>
+  {% if date_start and date_end %}
+  <div class="stat">
+    <span class="stat-label">{{ t('date_range') }}</span>
+    <span class="stat-value">{{ date_start.isoformat() }} — {{ date_end.isoformat() }}</span>
+  </div>
+  {% endif %}
+  {% if top_superzahl %}
+  <div class="stat highlight">
+    <span class="stat-label">{{ t('most_common_superzahl') }}</span>
+    <span class="stat-value">{{ top_superzahl.digit }} ({{ top_superzahl.count }}×, {{ "%.1f"|format(top_superzahl.pct) }}%)</span>
+  </div>
+  {% endif %}
+</section>
+
+{% if series_result or series_error %}
+<section class="card">
+  <h2>{{ t('series_title') }}</h2>
+  {% if series_error %}
+  <div class="alert">{{ series_error }}</div>
+  {% elif series_result %}
+  <p class="series-chips">
+    {{ t('series_numbers') }}:
+    {% for n in series_result.numbers %}
+    <span class="chip">{{ n }}</span>
+    {% endfor %}
+  </p>
+  <div class="series-results">
+    {% if series_result.numbers|length == 6 %}
+    <div class="result-box">
+      <h3>{{ t('exact_match') }}</h3>
+      <p>{{ series_result.exact_matches }} {{ t('times') }} ({{ "%.4f"|format(series_result.exact_pct) }}%)</p>
+    </div>
+    {% endif %}
+    <div class="result-box">
+      <h3>{{ t('subset_match') }}</h3>
+      <p>{{ series_result.subset_matches }} {{ t('draws') }} ({{ "%.2f"|format(series_result.subset_pct) }}%)</p>
+    </div>
+  </div>
+  <h3>{{ t('partial_matches') }}</h3>
+  <table class="data-table compact">
+    <thead>
+      <tr>
+        <th>{{ t('matched_count') }}</th>
+        <th>{{ t('count') }}</th>
+        <th>{{ t('probability') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for k, cnt, pct in series_result.partial_matches %}
+      <tr>
+        <td>{{ k }} / 6</td>
+        <td>{{ cnt }}</td>
+        <td>{{ "%.2f"|format(pct) }}%</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+{% endif %}
+
+<div class="grid-2">
+  <section class="card">
+    <h2>{{ t('number_stats') }}</h2>
+    <div class="table-wrap">
+      <table class="data-table" id="numbers-table">
+        <thead>
+          <tr>
+            <th>{{ t('number') }}</th>
+            <th>{{ t('count') }}</th>
+            <th>{{ t('probability') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in frequencies %}
+          <tr class="{% if f.count == 0 %}zero{% endif %}">
+            <td><span class="ball">{{ f.number }}</span></td>
+            <td>{{ f.count }}</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar" style="width: {{ f.pct }}%"></div>
+                <span>{{ "%.2f"|format(f.pct) }}%</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>{{ t('superzahl_title') }}</h2>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>{{ t('superzahl') }}</th>
+            <th>{{ t('count') }}</th>
+            <th>{{ t('probability') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in superzahl_stats %}
+          <tr class="{% if s.count == 0 %}zero{% endif %}">
+            <td><span class="chip super">{{ s.digit }}</span></td>
+            <td>{{ s.count }}</td>
+            <td>
+              <div class="bar-cell">
+                <div class="bar super-bar" style="width: {{ s.pct }}%"></div>
+                <span>{{ "%.2f"|format(s.pct) }}%</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endif %}
