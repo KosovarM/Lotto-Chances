@@ -11,7 +11,7 @@ from lotto.analyze import (
     load_draws_from_json,
     weekly_summaries,
 )
-from lotto.fetch import fetch_draws_last_year
+from lotto.fetch import fetch_draws_last_year, load_draws_from_csv
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -26,7 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--data",
         type=Path,
         default=None,
-        help="JSON file with draws (default: fetch/cache/sample)",
+        help="JSON or CSV file with draws (default: fetch/cache/sample)",
     )
     analyze.add_argument(
         "--format",
@@ -41,15 +41,18 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _load_draws(path: Path):
+    suffix = path.suffix.lower()
+    if suffix == ".csv":
+        return load_draws_from_csv(path)
+    return load_draws_from_json(path)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
     if args.command == "analyze":
-        draws = (
-            load_draws_from_json(args.data)
-            if args.data
-            else fetch_draws_last_year()
-        )
+        draws = _load_draws(args.data) if args.data else fetch_draws_last_year()
         if args.format == "json":
             from lotto.analyze import frequency_table
 
@@ -66,11 +69,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command == "weekly":
-        draws = (
-            load_draws_from_json(args.data)
-            if args.data
-            else fetch_draws_last_year()
-        )
+        draws = _load_draws(args.data) if args.data else fetch_draws_last_year()
         for s in weekly_summaries(draws):
             print(
                 f"ISO {s.iso_year}-W{s.iso_week:02d}: "
