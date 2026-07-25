@@ -1,0 +1,14 @@
+[
+  {"draw_date": "2025-07-05", "numbers": [3, 12, 18, 27, 33, 45], "superzahl": 4},
+  {"draw_date": "2025-07-12", "numbers": [1, 9, 14, 22, 38, 49], "superzahl": 1},
+  {"draw_date": "2025-07-19", "numbers": [5, 11, 19, 24, 31, 42], "superzahl": 7},
+  {"draw_date": "2025-07-26", "numbers": [2, 8, 16, 25, 36, 44], "superzahl": 0},
+  {"draw_date": "2025-08-02", "numbers": [3, 12, 20, 28, 35, 47], "superzahl": 3},
+  {"draw_date": "2025-08-09", "numbers": [6, 13, 21, 29, 37, 48], "superzahl": 9},
+  {"draw_date": "2025-08-16", "numbers": [4, 10, 17, 26, 34, 41], "superzahl": 2},
+  {"draw_date": "2025-08-23", "numbers": [7, 15, 23, 30, 39, 46], "superzahl": 5},
+  {"draw_date": "2025-08-30", "numbers": [3, 11, 18, 27, 33, 45], "superzahl": 8},
+  {"draw_date": "2025-09-06", "numbers": [1, 14, 19, 22, 38, 49], "superzahl": 6},
+  {"draw_date": "2025-09-13", "numbers": [5, 9, 20, 24, 31, 42], "superzahl": 1},
+  {"draw_date": "2025-09-20", "numbers": [2, 8, 16, 25, 36, 44], "superzahl": 4}
+]

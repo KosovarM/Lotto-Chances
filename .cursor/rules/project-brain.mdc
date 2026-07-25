@@ -1,0 +1,20 @@
+---
+description: Links CodingProjekt1 to Obsidian project brain and agent workflow
+alwaysApply: true
+---
+
+# CodingProjekt1 — Project brain
+
+**Obsidian vault:** `C:\Users\Kosov\OneDrive\Documents\ObsidianVaults\CodingProjekt1\CodingProjekt`
+
+After meaningful work:
+
+1. Update `90 Changelog.md` in the vault (or delegate `@cp1-documenter`).
+2. Log bugs in `80 Error collection.md`.
+3. File Research in `70 Documentation/Research/`, Critic reviews in `70 Documentation/Reviews/`.
+
+**Agents:** See `AGENTS.md` and vault `30 Agenten.md`. Use skills `@cp1-research`, `@cp1-coder`, `@cp1-critic`, `@cp1-documenter`, `@cp1-tester`, `@cp1-architect`.
+
+**Project Leader** orchestrates; prefer dedicated agent skills over doing everything in one chat.
+
+**Lotto app:** Statistics only — never imply past draws predict future wins. Include disclaimer in user-facing output.
