@@ -44,9 +44,9 @@ See [AGENTS.md](AGENTS.md). In Cursor, invoke e.g. `@cp1-research`, `@cp1-coder`
 ## Status
 
 - [x] Agent framework + vault
-- [x] Analyzer skeleton with sample data
-- [ ] Live fetch from official/historical source (Research → Coder)
-- [ ] GitHub remote + first push
+- [x] Analyzer skeleton with sample data + live CSV fetch
+- [x] GitHub: https://github.com/KosovarM/CodeProject1
+- [ ] Python installed locally (`python --version` in PowerShell)
 
 ## License
 
