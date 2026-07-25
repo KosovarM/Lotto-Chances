@@ -27,6 +27,10 @@ python -m lotto.cli analyze
 # JSON output
 python -m lotto.cli analyze --format json
 
+# Web UI
+python -m lotto.cli web
+# Open http://127.0.0.1:5000
+
 # Weekly breakdown
 python -m lotto.cli weekly
 ```
@@ -41,12 +45,15 @@ Start at `00 Start.md` — agents, changelog, errors.
 
 See [AGENTS.md](AGENTS.md). In Cursor, invoke e.g. `@cp1-research`, `@cp1-coder`.
 
-## Status
+## Status — Projekt 1 abgeschlossen (2026-07-25)
 
-- [x] Agent framework + vault
-- [x] Analyzer skeleton with sample data + live CSV fetch
+- [x] Agent framework + Obsidian vault
+- [x] Lotto 6aus49 CLI + Web UI (EN/DE)
+- [x] Live CSV fetch + draw-day cache refresh
 - [x] GitHub: https://github.com/KosovarM/CodeProject1
-- [ ] Python installed locally (`python --version` in PowerShell)
+- [x] 19 tests passing
+
+**Nächstes Projekt:** Lokales Serien-Streaming — siehe Obsidian [[10 Project]]
 
 ## License
 

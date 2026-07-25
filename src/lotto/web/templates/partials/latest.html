@@ -1,0 +1,63 @@
+{% if error %}
+<div class="alert">{{ error }}</div>
+{% elif latest_draw %}
+<section class="card latest-hero">
+  <div class="latest-header">
+    <div>
+      <h2>{{ t('latest_title') }}</h2>
+      <p class="hint">{{ t('latest_subtitle') }}</p>
+    </div>
+    <a class="btn-secondary"
+       href="?lang={{ lang }}&tab=latest&refresh=1&preset={{ form.preset }}&start={{ form.start }}&end={{ form.end }}&series={{ form.series }}">
+      {{ t('refresh_data') }}
+    </a>
+  </div>
+  <p class="latest-date">{{ latest_draw.draw_date.isoformat() }}</p>
+  <p class="hint data-meta">{{ t('data_updated') }}: {{ latest_draw.draw_date.isoformat() }}</p>
+  <div class="latest-numbers">
+    {% for n in latest_draw.numbers %}
+    <span class="ball large">{{ n }}</span>
+    {% endfor %}
+    <span class="superzahl-label">{{ t('superzahl') }}</span>
+    <span class="chip super large">
+      {% if latest_draw.superzahl is not none %}{{ latest_draw.superzahl }}{% else %}{{ t('no_superzahl') }}{% endif %}
+    </span>
+  </div>
+</section>
+
+<section class="card">
+  <h2>{{ t('recent_draws') }}</h2>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>{{ t('draw_date') }}</th>
+          <th>{{ t('winning_numbers') }}</th>
+          <th>{{ t('superzahl') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for draw in recent_draws %}
+        <tr>
+          <td>{{ draw.draw_date.isoformat() }}</td>
+          <td>
+            <div class="draw-row-numbers">
+              {% for n in draw.numbers %}
+              <span class="ball small">{{ n }}</span>
+              {% endfor %}
+            </div>
+          </td>
+          <td>
+            {% if draw.superzahl is not none %}
+            <span class="chip super">{{ draw.superzahl }}</span>
+            {% else %}
+            {{ t('no_superzahl') }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}

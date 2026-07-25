@@ -5,7 +5,13 @@ from collections import Counter
 from datetime import date
 from pathlib import Path
 
-from lotto.models import Draw, NumberFrequency, WeeklySummary
+from lotto.models import (
+    Draw,
+    NumberFrequency,
+    SeriesMatchResult,
+    SuperzahlFrequency,
+    WeeklySummary,
+)
 
 DISCLAIMER = (
     "Note: Past draw frequencies do not predict future results. "
@@ -62,6 +68,84 @@ def weekly_summaries(draws: list[Draw], top_k: int = 3) -> list[WeeklySummary]:
             )
         )
     return summaries
+
+
+def filter_draws_by_date(
+    draws: list[Draw],
+    *,
+    start: date | None = None,
+    end: date | None = None,
+) -> list[Draw]:
+    result = draws
+    if start is not None:
+        result = [d for d in result if d.draw_date >= start]
+    if end is not None:
+        result = [d for d in result if d.draw_date <= end]
+    return result
+
+
+def superzahl_frequency(draws: list[Draw]) -> list[SuperzahlFrequency]:
+    counter: Counter[int] = Counter()
+    for draw in draws:
+        if draw.superzahl is not None:
+            counter[draw.superzahl] += 1
+    total = sum(counter.values()) or 1
+    return [
+        SuperzahlFrequency(
+            digit=d,
+            count=counter.get(d, 0),
+            pct=100.0 * counter.get(d, 0) / total,
+        )
+        for d in range(10)
+    ]
+
+
+def parse_number_series(raw: str) -> tuple[int, ...]:
+    parts = [p.strip() for p in raw.replace(";", ",").split(",") if p.strip()]
+    if not parts:
+        return ()
+    numbers = tuple(sorted({int(p) for p in parts}))
+    if len(numbers) != len(parts):
+        raise ValueError("duplicate numbers")
+    if any(n < 1 or n > 49 for n in numbers):
+        raise ValueError("numbers must be between 1 and 49")
+    if len(numbers) > 6:
+        raise ValueError("at most 6 numbers allowed")
+    return numbers
+
+
+def analyze_series(draws: list[Draw], numbers: tuple[int, ...]) -> SeriesMatchResult:
+    if not numbers:
+        raise ValueError("at least one number required")
+
+    draw_count = len(draws)
+    exact = 0
+    subset = 0
+    partial_counter: Counter[int] = Counter()
+    target = set(numbers)
+
+    for draw in draws:
+        matched = len(target & set(draw.numbers))
+        partial_counter[matched] += 1
+        if matched == len(numbers):
+            subset += 1
+        if len(numbers) == 6 and draw.numbers == numbers:
+            exact += 1
+
+    denom = draw_count or 1
+    partial = tuple(
+        (k, partial_counter[k], 100.0 * partial_counter[k] / denom)
+        for k in sorted(partial_counter)
+    )
+    return SeriesMatchResult(
+        numbers=numbers,
+        draw_count=draw_count,
+        exact_matches=exact,
+        exact_pct=100.0 * exact / denom,
+        subset_matches=subset,
+        subset_pct=100.0 * subset / denom,
+        partial_matches=partial,
+    )
 
 
 def format_frequency_report(draws: list[Draw], limit: int = 10) -> str:
