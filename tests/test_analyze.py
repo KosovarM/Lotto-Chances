@@ -28,7 +28,7 @@ def test_load_sample_json(sample_path):
     assert all(len(d.numbers) == 6 for d in draws)
 
 
-def test_weekly_summaries_group_by_iso_week():
+def test_weekly_summaries_group_by_iso_week(sample_path):
     draws = load_draws_from_json(sample_path)
     summaries = weekly_summaries(draws)
     assert summaries
