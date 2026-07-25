@@ -1,0 +1,13 @@
+---
+description: Python conventions for Lotto 6aus49 analyzer
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python — CodeProject1
+
+- Use `src/lotto/` package; run as `python -m lotto.cli`.
+- Type hints on public functions; dataclasses in `models.py`.
+- Tests in `tests/` with `pytest`; name files `test_*.py`.
+- Cache draw data under `data/` (gitignored); do not commit large JSON unless sample fixture.
+- External fetch logic stays in `fetch.py`; analysis pure in `analyze.py`.
