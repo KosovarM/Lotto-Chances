@@ -136,4 +136,4 @@ Lotto-Chances/
 
 ## License
 
-MIT. This is a learning project, and the draw data belongs to its upstream sources (see [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md)).
+[MIT](LICENSE). This is a learning project, and the draw data belongs to its upstream sources (see [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md)).
