@@ -12,6 +12,9 @@ venv/
 data/*.json
 !data/sample_draws.json
 data/*.csv
+data/results/
+# Receipt photos: bearer slips with Losnummer, never commit
+data/tickets/
 
 # IDE
 .vscode/

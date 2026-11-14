@@ -20,6 +20,14 @@ Lotto Chances (formerly *CodeProject1*) downloads the full Lotto 6aus49 draw his
 - Per-week summary (ISO weeks) with the top numbers of each week.
 - Number-series check: enter 1–6 numbers and see exact 6-number matches, how often all of your numbers were drawn together, and a breakdown of partial matches.
 
+**Receipt check** ("Schein prüfen")
+- Take a photo of a Lotto 6aus49 receipt (Spielquittung) or upload one. The app reads all tips, the Superzahl, Spieltag, Laufzeit and draw date, then checks every covered draw against the official numbers and payouts (Gewinnquoten).
+- Text recognition runs locally (RapidOCR on ONNX Runtime). The photo is not stored or sent anywhere.
+- The parser uses the receipt's grid and the game rules (six different numbers 1–49, printed ascending) to re-read or flag doubtful cells. Flagged fields are highlighted in an editable form, so you can fix them and check again.
+- If the draw date can't be read, it is derived from the purchase time and marked for confirmation, or you are asked to enter it.
+- Super 6 and Spiel 77 are checked from the Losnummer when the receipt says they were played.
+- Draws that haven't happened yet, and payouts that haven't been published yet, are shown as pending.
+
 **Web UI** (Flask)
 - **Statistics** tab with timeframe presets (1, 3, 6 or 12 months, all data) or a custom date range.
 - **Latest draw** tab with the most recent draw, its Superzahl, and the last 20 draws.
@@ -30,6 +38,7 @@ Lotto Chances (formerly *CodeProject1*) downloads the full Lotto 6aus49 draw his
 **CLI**
 - `analyze`: top-10 numbers by frequency, as text or JSON.
 - `weekly`: per-ISO-week summary.
+- `ticket PHOTO [--date YYYY-MM-DD]`: reads a receipt photo and prints what it won.
 - `web`: starts the web UI with a configurable host and port.
 - `--data` accepts your own CSV or JSON draw file.
 
@@ -75,6 +84,14 @@ pip install -e ".[dev]"
 pytest
 ```
 
+The receipt check needs the optional OCR packages (about 100 MB, no GPU needed):
+
+```bash
+pip install -e ".[ocr]"
+```
+
+To measure recognition quality, put receipt photos with a matching `<name>.truth.json` in `data/tickets/` (git-ignored, because receipts carry a Losnummer) and run `python scripts/eval_ticket_ocr.py`. It also tests tilted, sideways, upside-down, low-resolution, blurred, dim and perspective-distorted versions of each photo.
+
 `pip install -r requirements.txt` also works if you only want the dependencies. In that case, run the CLI with `src/` on `PYTHONPATH`.
 
 ## Usage
@@ -119,11 +136,14 @@ Lotto-Chances/
 │   ├── analyze.py      # frequencies, Superzahl stats, weekly summaries, series check
 │   ├── fetch.py        # CSV download, cache freshness, offline fallback
 │   ├── models.py       # Draw and result dataclasses (with validation)
+│   ├── results.py      # official numbers + payouts for one draw (WestLotto), cached
+│   ├── ticket/         # receipt photo -> OCR -> parser -> prize classes
 │   └── web/            # Flask app, EN/DE strings, templates, CSS
 ├── data/
 │   └── sample_draws.json   # bundled sample (the download cache is git-ignored)
 ├── docs/               # disclaimer and data-source notes
-├── tests/              # pytest suite
+├── scripts/            # eval_ticket_ocr.py: recognition accuracy on real photos
+├── tests/              # pytest suite (fixtures: recorded OCR tokens, result XML)
 ├── AGENTS.md           # Cursor agent roles used during development
 └── pyproject.toml
 ```

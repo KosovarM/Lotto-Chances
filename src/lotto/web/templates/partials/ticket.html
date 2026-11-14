@@ -1,0 +1,171 @@
+{% if error %}
+<div class="alert" role="alert">{{ error }}</div>
+{% endif %}
+
+<section class="card" aria-labelledby="scan-title">
+  <h2 id="scan-title">{{ t('ticket_title') }}</h2>
+  <p class="hint">{{ t('ticket_hint') }}</p>
+  <form class="upload-form" action="/ticket?lang={{ lang }}" method="POST" enctype="multipart/form-data" data-busy-form>
+    <label class="upload-drop" for="photo">
+      <span class="upload-title">{{ t('ticket_choose') }}</span>
+      <span class="hint">{{ t('ticket_choose_hint') }}</span>
+      <input type="file" id="photo" name="photo" accept="image/*" required>
+    </label>
+    <button type="submit" class="btn-primary">{{ t('ticket_scan') }}</button>
+    <p class="hint busy-note" role="status" aria-live="polite" data-busy-text="{{ t('ticket_busy') }}"></p>
+  </form>
+  <p class="hint privacy-note">{{ t('ticket_privacy') }}</p>
+</section>
+
+{% if outcomes %}
+{% set grand = namespace(total=0, pending=0, unpriced=false) %}
+{% for o in outcomes %}
+  {% if o.result is none %}{% set grand.pending = grand.pending + 1 %}{% endif %}
+  {% set grand.total = grand.total + o.total %}
+  {% if o.has_unpriced_win %}{% set grand.unpriced = true %}{% endif %}
+{% endfor %}
+<section class="card result-summary {% if grand.total > 0 or grand.unpriced %}win{% endif %}" aria-live="polite">
+  <h2>{{ t('result_title') }}</h2>
+  {% if grand.total > 0 %}
+  <p class="result-amount">{{ "{:,.2f}".format(grand.total).replace(",", "X").replace(".", ",").replace("X", ".") }} €</p>
+  {% elif grand.unpriced %}
+  <p class="result-amount">{{ t('result_win_unpriced') }}</p>
+  {% elif grand.pending == outcomes|length %}
+  <p class="result-amount muted">{{ t('result_all_pending') }}</p>
+  {% else %}
+  <p class="result-amount muted">{{ t('result_no_win') }}</p>
+  {% endif %}
+  {% if grand.unpriced and grand.total > 0 %}<p class="hint">{{ t('result_plus_unpriced') }}</p>{% endif %}
+  {% if grand.pending and grand.pending < outcomes|length %}<p class="hint">{{ t('result_some_pending') }}</p>{% endif %}
+  <p class="hint">{{ t('result_disclaimer') }}</p>
+</section>
+
+{% for o in outcomes %}
+<section class="card">
+  <div class="latest-header">
+    <h3>{{ t('draw_of') }} {{ o.draw_date.strftime('%d.%m.%Y') }}</h3>
+    {% if o.result is not none %}
+    <div class="latest-numbers compact">
+      {% for n in o.result.numbers %}<span class="ball small">{{ n }}</span>{% endfor %}
+      <span class="superzahl-label">{{ t('superzahl') }}</span>
+      <span class="chip super">{{ o.result.superzahl if o.result.superzahl is not none else '—' }}</span>
+    </div>
+    {% endif %}
+  </div>
+  {% if o.result is none %}
+  <p class="hint">{{ t('draw_pending') }}</p>
+  {% else %}
+  {% if not o.result.quotes_final %}<p class="hint">{{ t('quotes_pending') }}</p>{% endif %}
+  <div class="table-wrap">
+    <table class="data-table tip-table">
+      <thead>
+        <tr><th>{{ t('tip') }}</th><th>{{ t('your_numbers') }}</th><th>{{ t('hits') }}</th><th>{{ t('prize_class') }}</th><th>{{ t('payout') }}</th></tr>
+      </thead>
+      <tbody>
+        {% for tip in o.tips %}
+        <tr class="{% if tip.prize_class %}winner{% endif %}">
+          <td>{{ tip.index }}.</td>
+          <td>
+            <div class="draw-row-numbers">
+              {% for n in tip.numbers %}
+              <span class="ball small {% if n in tip.hits %}hit{% else %}miss{% endif %}">{{ n }}<span class="visually-hidden">{% if n in tip.hits %} ({{ t('hit') }}){% endif %}</span></span>
+              {% endfor %}
+            </div>
+          </td>
+          <td>{{ tip.hits|length }}{% if tip.superzahl_hit %} + SZ{% endif %}</td>
+          <td>{% if tip.prize_class %}{{ tip.prize_class }}{% else %}—{% endif %}</td>
+          <td>
+            {% if tip.prize_class and tip.payout is not none %}{{ "%.2f"|format(tip.payout)|replace('.', ',') }} €
+            {% elif tip.prize_class %}{{ t('payout_pending') }}
+            {% else %}—{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if o.spiel77_class or o.super6_class %}
+  <p>
+    {% if o.spiel77_class %}Spiel 77: {{ t('prize_class') }} {{ o.spiel77_class }}{% if o.spiel77_payout %} – {{ "%.2f"|format(o.spiel77_payout)|replace('.', ',') }} €{% endif %}<br>{% endif %}
+    {% if o.super6_class %}Super 6: {{ t('prize_class') }} {{ o.super6_class }}{% if o.super6_payout %} – {{ "%.2f"|format(o.super6_payout)|replace('.', ',') }} €{% endif %}{% endif %}
+  </p>
+  {% endif %}
+  {% if o.result.source == 'history' %}<p class="hint">{{ t('source_history') }}</p>{% endif %}
+  {% endif %}
+</section>
+{% endfor %}
+{% endif %}
+
+<section class="card" aria-labelledby="edit-title">
+  <h2 id="edit-title">{% if scanned %}{{ t('edit_title_scanned') }}{% else %}{{ t('edit_title_manual') }}{% endif %}</h2>
+  {% if scanned %}<p class="hint">{{ t('edit_hint') }}</p>{% endif %}
+
+  {% if ticket.errors or scan_warnings %}
+  <ul class="notice-list" role="alert">
+    {% for e in ticket.errors %}<li class="notice error">{{ t(e) }}</li>{% endfor %}
+    {% for w in scan_warnings %}{% if t('warn_' ~ w) != 'warn_' ~ w %}<li class="notice">{{ t('warn_' ~ w) }}</li>{% endif %}{% endfor %}
+  </ul>
+  {% endif %}
+
+  <form action="/ticket?lang={{ lang }}" method="POST" class="ticket-form" data-busy-form>
+    <fieldset>
+      <legend>{{ t('your_tips') }}</legend>
+      <div class="table-wrap">
+        <table class="tip-grid">
+          <tbody>
+            {% for row in ticket.rows %}
+            {% set i = loop.index %}
+            <tr class="{% if i in ticket.bad_rows %}row-bad{% endif %}">
+              <th scope="row">{{ i }}.</th>
+              {% for cell in row %}
+              <td><input type="text" inputmode="numeric" pattern="[0-9]{1,2}" maxlength="2" autocomplete="off"
+                         name="n_{{ i }}_{{ loop.index }}" value="{{ cell.v }}"
+                         aria-label="{{ t('tip') }} {{ i }}, {{ t('number') }} {{ loop.index }}"
+                         class="{% if cell.bad %}suspect{% endif %}" {% if cell.bad %}aria-invalid="true"{% endif %}></td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">{{ t('tips_empty_ignored') }}</p>
+    </fieldset>
+
+    <div class="ticket-meta">
+      <div class="field">
+        <label for="superzahl">{{ t('superzahl') }} (0–9)</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]" maxlength="1" id="superzahl" name="superzahl"
+               value="{{ ticket.superzahl }}" required {% if 'err_superzahl' in ticket.errors %}aria-invalid="true" class="suspect"{% endif %}>
+      </div>
+      <div class="field">
+        <label for="first_draw">{{ t('first_draw') }}</label>
+        <input type="date" id="first_draw" name="first_draw" value="{{ ticket.first_draw }}" required
+               aria-describedby="first-draw-help"
+               {% if ticket.first_draw_inferred or 'err_date_missing' in ticket.errors or 'err_date_not_draw_day' in ticket.errors %}class="suspect"{% endif %}>
+        <span id="first-draw-help" class="hint">{{ t('first_draw_hint') }}</span>
+      </div>
+      <div class="field">
+        <label for="weeks">{{ t('weeks') }}</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]{1,2}" maxlength="2" id="weeks" name="weeks" value="{{ ticket.weeks }}" required>
+      </div>
+      <fieldset class="field">
+        <legend>{{ t('draw_days') }}</legend>
+        <label class="check"><input type="checkbox" name="wed" value="1" {% if ticket.wed %}checked{% endif %}> {{ t('wednesday') }}</label>
+        <label class="check"><input type="checkbox" name="sat" value="1" {% if ticket.sat %}checked{% endif %}> {{ t('saturday') }}</label>
+      </fieldset>
+      <div class="field">
+        <label for="losnummer">{{ t('losnummer') }}</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]{7}" maxlength="7" id="losnummer" name="losnummer"
+               value="{{ ticket.losnummer }}" autocomplete="off" aria-describedby="los-help">
+        <span id="los-help" class="hint">{{ t('losnummer_hint') }}</span>
+      </div>
+      <fieldset class="field">
+        <legend>{{ t('extra_games') }}</legend>
+        <label class="check"><input type="checkbox" name="super6" value="1" {% if ticket.super6 %}checked{% endif %}> Super 6</label>
+        <label class="check"><input type="checkbox" name="spiel77" value="1" {% if ticket.spiel77 %}checked{% endif %}> Spiel 77</label>
+      </fieldset>
+    </div>
+    <button type="submit" class="btn-primary">{{ t('check_ticket') }}</button>
+    <p class="hint busy-note" role="status" aria-live="polite" data-busy-text="{{ t('check_busy') }}"></p>
+  </form>
+</section>

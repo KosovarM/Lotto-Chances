@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding="ISO-8859-15" ?>
+<root>
+<exception></exception>
+<version>1.0</version>
+<spielart>LOTTO</spielart>
+<spielformel>6 aus 49</spielformel>
+<daten>
+	<datum>14.11.2026</datum>
+	<wochentag>Samstag</wochentag>
+	<ausspielung>46</ausspielung>
+</daten>
+<ziehung>
+	<hauptlotterie>
+		<bezeichnung></bezeichnung>
+		<zahlen_sortiert>
+			<zahl>11</zahl><zahl>15</zahl><zahl>17</zahl><zahl>32</zahl><zahl>39</zahl><zahl>49</zahl>
+		</zahlen_sortiert>
+		<zahlen>
+			<zahl>39</zahl><zahl>49</zahl><zahl>32</zahl><zahl>15</zahl><zahl>17</zahl><zahl>11</zahl>
+		</zahlen>
+		<zusatzzahl></zusatzzahl>
+		<superzahl>3</superzahl>
+	</hauptlotterie>
+	<spiel77>4257070</spiel77>
+	<super6>321657</super6>
+</ziehung>
+<spieleinsatz>
+	<hauptlotterie>liegt noch nicht vor</hauptlotterie>
+	<spiel77>liegt noch nicht vor</spiel77>
+	<super6>liegt noch nicht vor</super6>
+</spieleinsatz>
+<quoten>
+		<hauptlotterie>
+			<bezeichnung></bezeichnung>
+			<klasse>
+				<gewinnklasse></gewinnklasse>
+				<anzahl>die Quoten liegen noch nicht vor</anzahl>
+				<quote></quote>
+			</klasse>
+		</hauptlotterie>
+	<anmerkung></anmerkung>
+	<spiel77>
+		<bezeichnung>Spiel 77</bezeichnung>
+		<klasse>
+			<gewinnklasse>1</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>die Quote liegt noch nicht vor</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>2</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>77.777,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>3</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>7.777,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>4</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>777,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>5</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>77,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>6</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>17,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>7</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>5,00 EUR</quote>
+		</klasse>
+	</spiel77>
+	<super6>
+		<bezeichnung>Super 6</bezeichnung>
+		<klasse>
+			<gewinnklasse>1</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>100.000,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>2</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>6.666,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>3</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>666,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>4</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>66,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>5</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>6,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>6</gewinnklasse>
+			<anzahl>-</anzahl>
+			<quote>2,50 EUR</quote>
+		</klasse>
+	</super6>
+</quoten>
+</root>

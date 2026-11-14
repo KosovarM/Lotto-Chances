@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding="ISO-8859-15" ?>
+<root>
+<exception></exception>
+<version>1.0</version>
+<spielart>LOTTO</spielart>
+<spielformel>6 aus 49</spielformel>
+<daten>
+	<datum>11.11.2026</datum>
+	<wochentag>Mittwoch</wochentag>
+	<ausspielung>46</ausspielung>
+</daten>
+<ziehung>
+	<hauptlotterie>
+		<bezeichnung></bezeichnung>
+		<zahlen_sortiert>
+			<zahl>11</zahl><zahl>20</zahl><zahl>21</zahl><zahl>23</zahl><zahl>31</zahl><zahl>49</zahl>
+		</zahlen_sortiert>
+		<zahlen>
+			<zahl>31</zahl><zahl>11</zahl><zahl>23</zahl><zahl>20</zahl><zahl>21</zahl><zahl>49</zahl>
+		</zahlen>
+		<zusatzzahl></zusatzzahl>
+		<superzahl>8</superzahl>
+	</hauptlotterie>
+	<spiel77>1122310</spiel77>
+	<super6>852773</super6>
+</ziehung>
+<spieleinsatz>
+	<hauptlotterie>21.541.879,20 EUR</hauptlotterie>
+	<spiel77>4.885.810,00 EUR</spiel77>
+	<super6>2.168.946,25 EUR</super6>
+</spieleinsatz>
+<quoten>
+	<hauptlotterie>
+		<bezeichnung></bezeichnung>
+		<klasse>
+			<gewinnklasse>1</gewinnklasse>
+			<anzahl>unb./Jackpot</anzahl>
+			<quote>4.600.220,60 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>2</gewinnklasse>
+			<anzahl>1</anzahl>
+			<quote>1.146.356,10 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>3</gewinnklasse>
+			<anzahl>32</anzahl>
+			<quote>12.418,80 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>4</gewinnklasse>
+			<anzahl>231</anzahl>
+			<quote>5.128,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>5</gewinnklasse>
+			<anzahl>1.822</anzahl>
+			<quote>180,30 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>6</gewinnklasse>
+			<anzahl>16.790</anzahl>
+			<quote>46,40 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>7</gewinnklasse>
+			<anzahl>33.708</anzahl>
+			<quote>19,70 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>8</gewinnklasse>
+			<anzahl>308.624</anzahl>
+			<quote>10,10 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>9</gewinnklasse>
+			<anzahl>252.154</anzahl>
+			<quote>6,00 EUR</quote>
+		</klasse>
+	</hauptlotterie>
+	<anmerkung></anmerkung>
+	<spiel77>
+		<bezeichnung>Spiel 77</bezeichnung>
+		<klasse>
+			<gewinnklasse>1</gewinnklasse>
+			<anzahl>unb./Jackpot</anzahl>
+			<quote>1.389.992,60 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>2</gewinnklasse>
+			<anzahl>2</anzahl>
+			<quote>77.777,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>3</gewinnklasse>
+			<anzahl>16</anzahl>
+			<quote>7.777,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>4</gewinnklasse>
+			<anzahl>162</anzahl>
+			<quote>777,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>5</gewinnklasse>
+			<anzahl>1.426</anzahl>
+			<quote>77,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>6</gewinnklasse>
+			<anzahl>14.563</anzahl>
+			<quote>17,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>7</gewinnklasse>
+			<anzahl>146.109</anzahl>
+			<quote>5,00 EUR</quote>
+		</klasse>
+	</spiel77>
+	<super6>
+		<bezeichnung>Super 6</bezeichnung>
+		<klasse>
+			<gewinnklasse>1</gewinnklasse>
+			<anzahl>1</anzahl>
+			<quote>100.000,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>2</gewinnklasse>
+			<anzahl>11</anzahl>
+			<quote>6.666,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>3</gewinnklasse>
+			<anzahl>170</anzahl>
+			<quote>666,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>4</gewinnklasse>
+			<anzahl>1.600</anzahl>
+			<quote>66,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>5</gewinnklasse>
+			<anzahl>16.945</anzahl>
+			<quote>6,00 EUR</quote>
+		</klasse>
+		<klasse>
+			<gewinnklasse>6</gewinnklasse>
+			<anzahl>161.402</anzahl>
+			<quote>2,50 EUR</quote>
+		</klasse>
+	</super6>
+</quoten>
+</root>

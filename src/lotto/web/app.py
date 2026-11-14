@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import date, timedelta
 
 from flask import Flask, render_template, request, session
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from lotto.analyze import (
     analyze_series,
@@ -12,7 +13,10 @@ from lotto.analyze import (
     superzahl_frequency,
 )
 from lotto.fetch import fetch_all_draws
+from lotto.web import ticket_view
 from lotto.web.i18n import SUPPORTED, t
+
+MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 
 PRESETS = {
     "1m": 30,
@@ -27,6 +31,7 @@ PRESETS = {
 def create_app() -> Flask:
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.secret_key = "lotto-dev-key-change-in-production"
+    app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_BYTES
 
     @app.context_processor
     def inject_lang():
@@ -41,6 +46,9 @@ def create_app() -> Flask:
         if request.args.get("lang") in SUPPORTED:
             session["lang"] = request.args["lang"]
             lang = request.args["lang"]
+
+        if request.args.get("tab") == "ticket":
+            return _render_ticket(ticket_view.empty_form())
 
         force_refresh = request.args.get("refresh") == "1"
         all_draws = fetch_all_draws(force_refresh=force_refresh)
@@ -102,12 +110,63 @@ def create_app() -> Flask:
             error=None if filtered else t(lang, "no_data"),
         )
 
+    @app.route("/ticket", methods=["POST"])
+    def ticket():
+        lang = _resolve_lang()
+        photo = request.files.get("photo")
+        if photo is not None and photo.filename:
+            return _scan_and_check(photo.read(), lang)
+        form = ticket_view.form_from_post(request.form)
+        valid = ticket_view.validate(form)
+        outcomes = ticket_view.evaluate(valid) if valid else None
+        return _render_ticket(form, outcomes=outcomes)
+
+    @app.errorhandler(RequestEntityTooLarge)
+    def too_large(_exc):
+        return _render_ticket(ticket_view.empty_form(), error=t(_resolve_lang(), "err_upload_too_large")), 413
+
+    def _scan_and_check(data: bytes, lang: str):
+        from lotto.ticket.ocr import BadImage, OcrUnavailable
+        from lotto.ticket.scan import scan_image
+
+        try:
+            scan = scan_image(data)
+        except OcrUnavailable:
+            return _render_ticket(ticket_view.empty_form(), error=t(lang, "err_ocr_missing"))
+        except BadImage:
+            return _render_ticket(ticket_view.empty_form(), error=t(lang, "err_bad_image"))
+        form = ticket_view.form_from_scan(scan)
+        valid = ticket_view.validate(form)
+        outcomes = ticket_view.evaluate(valid) if valid else None
+        return _render_ticket(form, outcomes=outcomes, scan_warnings=scan.warnings, scanned=True)
+
     def _resolve_lang() -> str:
         if request.args.get("lang") in SUPPORTED:
             return request.args["lang"]
         return session.get("lang", "en")
 
     return app
+
+
+def _render_ticket(
+    ticket_form: ticket_view.TicketForm,
+    *,
+    outcomes=None,
+    scan_warnings: list[str] | None = None,
+    scanned: bool = False,
+    error: str | None = None,
+):
+    form = _default_form([])
+    form["tab"] = "ticket"
+    return render_template(
+        "index.html",
+        form=form,
+        ticket=ticket_form,
+        outcomes=outcomes,
+        scan_warnings=scan_warnings or [],
+        scanned=scanned,
+        error=error,
+    )
 
 
 def _default_form(all_draws: list) -> dict:
@@ -126,7 +185,7 @@ def _form_from_request(all_draws: list) -> dict:
     end_default = all_draws[-1].draw_date if all_draws else date.today()
     start_default = end_default - timedelta(days=365)
     tab = request.args.get("tab", "stats")
-    if tab not in ("stats", "latest"):
+    if tab not in ("stats", "latest", "ticket"):
         tab = "stats"
     return {
         "preset": request.args.get("preset", "1y"),

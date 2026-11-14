@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from urllib.error import URLError
 from urllib.request import urlopen
@@ -23,6 +23,7 @@ CSV_CACHE = DATA_DIR / "draws_cache.csv"
 JSON_CACHE = DATA_DIR / "draws_cache.json"
 SAMPLE_JSON = DATA_DIR / "sample_draws.json"
 CACHE_MAX_AGE_DAYS = 7
+RETRY_STALE_AFTER = timedelta(hours=6)
 # Lotto 6aus49: Wednesday and Saturday (~19:25 CET)
 DRAW_WEEKDAYS = (2, 5)  # Mon=0 … Wed=2, Sat=5
 
@@ -94,10 +95,12 @@ def _cache_data_is_stale(draws: list[Draw], *, reference: date | None = None) ->
 def _cache_is_fresh(path: Path, draws: list[Draw] | None = None) -> bool:
     if not path.exists():
         return False
+    downloaded = datetime.fromtimestamp(path.stat().st_mtime)
     if draws is not None and _cache_data_is_stale(draws):
-        return False
-    age = date.today() - date.fromtimestamp(path.stat().st_mtime)
-    return age.days < CACHE_MAX_AGE_DAYS
+        # The archive publishes a draw hours to days after it happens. Without
+        # this pause every page view on a draw day would re-download the CSV.
+        return datetime.now() - downloaded < RETRY_STALE_AFTER
+    return (date.today() - downloaded.date()).days < CACHE_MAX_AGE_DAYS
 
 
 def download_csv(url: str = CSV_URL, dest: Path = CSV_CACHE) -> Path:
