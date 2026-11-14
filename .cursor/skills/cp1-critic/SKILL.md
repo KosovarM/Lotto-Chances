@@ -14,3 +14,4 @@ Read vault spec: `Agents/03-Critic.md` in the Obsidian vault.
 - Flag misleading lottery "prediction" UX as **Critical**.
 - Cite file paths; do not rewrite entire modules.
 - Save review to vault `70 Documentation/Reviews/` when asked.
+- Follow vault `30 Agents/Model efficiency.md` (light for narrow checklist passes; heavy for full security/architecture reviews).

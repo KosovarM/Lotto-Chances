@@ -1,6 +1,12 @@
-# Agents — CodingProjekt1
+# Agents — Lotto Chances
 
-This repo implements the agent workflow documented in the Obsidian vault (`30 Agenten.md`).
+Orchestration brain lives in the Obsidian vault; this repo holds the code.
+
+| Path | Role |
+|------|------|
+| **Code** | `%USERPROFILE%\.cursor\Repositories\Lotto-Chances` |
+| **Vault** | `%USERPROFILE%\OneDrive\Documents\ObsidianVaults\Lotto-Chances\Lotto-Chances` |
+| **GitHub** | https://github.com/KosovarM/Lotto-Chances |
 
 ## Roles
 
@@ -20,11 +26,19 @@ This repo implements the agent workflow documented in the Obsidian vault (`30 Ag
 Leader → Research? → Architect? → Coder → Tester → Critic → Documenter
 ```
 
+## Model efficiency (mandatory)
+
+Vault: `30 Agents/Model efficiency.md`
+
+- **Small / uncomplicated** tasks → **lighter** models.
+- **Heavy** work → stronger models only when needed.
+- Briefs include `Model tier: light | standard | heavy`.
+
 ## Tips
 
-- **New chat per agent** keeps context clean for long tasks.
-- Research outputs go to vault `70 Documentation/Research/`.
+- Research outputs → vault `70 Documentation/Research/`.
 - Never skip the lottery disclaimer in user-facing features.
+- **Ko-Stream** has a separate vault/repo — do not mix docs.
 
 ## Cursor locations
 

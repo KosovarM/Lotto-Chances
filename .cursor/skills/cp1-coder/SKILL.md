@@ -14,6 +14,7 @@ Read vault spec: `Agents/02-Coder.md` in the Obsidian vault.
 - Run `pytest` before handoff.
 - No secrets in repo; lottery disclaimer in user-facing strings.
 - Hand off to Tester with run instructions.
+- Follow vault `30 Agents/Model efficiency.md`: light models for small/clear tasks; escalate once if the brief underestimates complexity.
 
 ## Repo root
 

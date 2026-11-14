@@ -15,3 +15,7 @@ Read vault spec: `Agents/06-Architect.md`.
 - Trade-off table; no full implementation
 
 Save specs to `70 Documentation/Architecture/` when complete.
+
+## Model efficiency
+
+Follow vault `30 Agents/Model efficiency.md`. Architecture work is usually `standard`/`heavy` — skip Architect entirely for light one-file tasks.

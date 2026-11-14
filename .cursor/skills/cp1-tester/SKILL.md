@@ -22,3 +22,4 @@ python -m lotto.cli analyze --help
 - Log failures in vault `80 Error collection.md` using Error Report template.
 - Fix only test code; production fixes go back to Coder.
 - Report includes exact commands and versions.
+- Follow vault `30 Agents/Model efficiency.md` (light for routine pytest runs; escalate if failures are unclear).

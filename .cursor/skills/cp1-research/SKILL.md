@@ -14,9 +14,10 @@ Read vault spec: `%USERPROFILE%\OneDrive\Documents\ObsidianVaults\CodingProjekt1
 - **Do not** implement features — output research only.
 - Use web search and official documentation.
 - End with recommendation and risks.
+- Follow vault `30 Agents/Model efficiency.md` (light models for small lookups; heavy only for deep/uncertain research).
 
 ## Output
 
-Use the template from `01-Research.md` (Sources table, Findings, Options, Recommendation).
+Use the template from `30 Agents/01-Research.md` (Sources table, Findings, Options, Recommendation).
 
 Suggest saving to vault: `70 Documentation/Research/YYYY-MM-DD — topic.md`.
