@@ -11,7 +11,7 @@ Read vault spec: `Agents/05-Tester.md`.
 ## Commands
 
 ```powershell
-cd %USERPROFILE%\.cursor\Repositories\CodeProject1
+# from the repository root
 .\.venv\Scripts\Activate.ps1
 pytest -v
 python -m lotto.cli analyze --help

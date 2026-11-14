@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # CP1 Research Agent
 
-Read vault spec: `%USERPROFILE%\OneDrive\Documents\ObsidianVaults\CodingProjekt1\CodingProjekt\Agents\01-Research.md`
+Read vault spec: `30 Agents/01-Research.md` in the Obsidian vault (see `AGENTS.md`).
 
 ## Rules
 

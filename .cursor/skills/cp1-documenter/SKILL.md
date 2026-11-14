@@ -21,4 +21,4 @@ Read vault spec: `Agents/04-Documenter.md`.
 - Use Obsidian wikilinks between vault files.
 - Follow vault `30 Agents/Model efficiency.md` — changelog/doc tweaks are typically `light`.
 
-Vault path: `%USERPROFILE%\OneDrive\Documents\ObsidianVaults\CodingProjekt1\CodingProjekt`
+Vault path: `%USERPROFILE%\OneDrive\Documents\ObsidianVaults\Lotto-Chances\Lotto-Chances`

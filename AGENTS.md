@@ -4,8 +4,8 @@ Orchestration brain lives in the Obsidian vault; this repo holds the code.
 
 | Path | Role |
 |------|------|
-| **Code** | `%USERPROFILE%\.cursor\Repositories\Lotto-Chances` |
-| **Vault** | `%USERPROFILE%\OneDrive\Documents\ObsidianVaults\Lotto-Chances\Lotto-Chances` |
+| **Code** | this repository |
+| **Vault** | `%USERPROFILE%\OneDrive\Documents\ObsidianVaults\Lotto-Chances\Lotto-Chances` (local, not in the repo) |
 | **GitHub** | https://github.com/KosovarM/Lotto-Chances |
 
 ## Roles

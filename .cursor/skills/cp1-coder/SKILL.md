@@ -18,4 +18,4 @@ Read vault spec: `Agents/02-Coder.md` in the Obsidian vault.
 
 ## Repo root
 
-`%USERPROFILE%\.cursor\Repositories\CodeProject1`
+The folder containing `pyproject.toml` (this repository).
